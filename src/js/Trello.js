@@ -1,6 +1,4 @@
 import { read, save } from './localStorage';
-/* eslint-disable consistent-return */
-/* eslint-disable class-methods-use-this */
 
 export default class Trello {
   constructor() {
