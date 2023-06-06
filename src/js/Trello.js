@@ -1,22 +1,44 @@
 import { read, save } from './localStorage';
 
 export default class Trello {
-  constructor() {
+  constructor(data) {
+    this.data = data;
     this.originList = null;
     this.originPrevElSibling = null;
     this.pageEvents = document.querySelector('.container');
   }
 
   init() {
-    //const state = read();
-    //if (state) {
+    this.renderItems();
+    // const state = read();
+    // if (state) {
     //  document.body.innerHTML = state;
-    //}
+    // }
     this.pageEvents.addEventListener('click', (e) => this.onAddTask(e));
     this.pageEvents.addEventListener('mouseover', (e) => this.onMouseOver(e));
     this.pageEvents.addEventListener('mouseout', (e) => this.onMouseOut(e));
     this.pageEvents.addEventListener('mousedown', (e) => this.onMouseDown(e));
     this.pageEvents.addEventListener('mouseup', (e) => this.onMouseUp(e));
+  }
+
+  renderItems() {
+    this.data.map((el) => {
+      this.pageEvents.insertAdjacentHTML(
+        'beforeend',
+        `
+        <div class="card">
+          <h3 class="title">${el.title}</h3>      
+          <ul class="list">
+            ${el.item.map((item) => `
+                <li class="item" draggable="true">${item}
+                  <span class="item__delete hidden">×</span>
+                </li>`)}
+          </ul>
+          <div class="addCard">+ Add another card</div>
+        </div>
+        `,
+      );
+    });
   }
 
   onAddTask(e) {
