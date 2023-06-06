@@ -8,10 +8,10 @@ export default class Trello {
   }
 
   init() {
-    const state = read();
-    if (state) {
-      document.body.innerHTML = state;
-    }
+    //const state = read();
+    //if (state) {
+    //  document.body.innerHTML = state;
+    //}
     this.pageEvents.addEventListener('click', (e) => this.onAddTask(e));
     this.pageEvents.addEventListener('mouseover', (e) => this.onMouseOver(e));
     this.pageEvents.addEventListener('mouseout', (e) => this.onMouseOut(e));
@@ -21,13 +21,6 @@ export default class Trello {
 
   onAddTask(e) {
     if (e.target.classList.contains('addCard')) {
-      const activeTextarea = document.querySelector('.new-task');
-      if (activeTextarea) {
-        const activeCard = activeTextarea.parentElement;
-        activeTextarea.remove();
-        activeCard.insertAdjacentHTML('beforeEnd', this.addButton());
-      }
-
       const selectedCard = e.target.closest('.card');
       e.target.remove();
       selectedCard.insertAdjacentHTML('beforeEnd', this.newTaskForm());
@@ -89,11 +82,6 @@ export default class Trello {
   }
 
   onMouseDown(e) {
-    if (e.target.classList.contains('new-task_content')) return;
-    if (e.target.classList.contains('addCard')) {
-      this.pageEvents.addEventListener('click', (event) => this.onDeleteTask(event));
-      return;
-    }
     if (e.target.classList.contains('item__delete')) {
       e.target.closest('.item').remove();
       save();
@@ -101,8 +89,6 @@ export default class Trello {
     }
     e.preventDefault();
     this.currentItem = e.target.closest('.item');
-    this.originList = this.currentItem.parentElement;
-    this.originPrevElSibling = this.currentItem.previousElementSibling;
     if (this.currentItem) {
       this.currentItem.classList.add('dragged');
       this.pageEvents.addEventListener('mousemove', this.drag);
@@ -115,13 +101,6 @@ export default class Trello {
 
   onMouseUp(e) {
     e.preventDefault();
-  }
-
-  onDeleteTask(e) {
-    if (e.target.classList.contains('item__delete')) {
-      e.target.closest('.item').remove();
-      save();
-    }
   }
 
   drag(e) {
@@ -147,8 +126,6 @@ export default class Trello {
     const list = this.querySelector('.list');
     if (list) {
       list.insertBefore(draggedEl, e.target.closest('.item'));
-    } else {
-      this.originList.insertBefore(draggedEl, this.originPrevElSibling);
     }
     draggedEl.classList.remove('dragged');
     draggedEl.style = '';
